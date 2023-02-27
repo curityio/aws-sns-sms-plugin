@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.curity.identityserver.plugin.awssns;
 
 import io.curity.identityserver.plugin.awssns.client.SNSClient;
@@ -29,8 +30,8 @@ import software.amazon.awssdk.services.sns.model.PublishRequest;
 import software.amazon.awssdk.services.sns.model.PublishResponse;
 import software.amazon.awssdk.services.sns.model.SnsException;
 
-
-public final class AwsSnsSmsSender implements SmsSender {
+public final class AwsSnsSmsSender implements SmsSender
+{
     private final SnsClient _snsClient;
     private static final Logger _logger = LoggerFactory.getLogger(AwsSnsSmsSender.class);
     private static final org.apache.logging.log4j.Logger _maskedLogger =
@@ -38,15 +39,18 @@ public final class AwsSnsSmsSender implements SmsSender {
 
     private final ExceptionFactory _exceptionFactory;
 
-    public AwsSnsSmsSender(AwsSnsSmsConfig configuration) {
+    public AwsSnsSmsSender(AwsSnsSmsConfig configuration)
+    {
         _snsClient = new SNSClient(configuration).getSnsClient();
         _exceptionFactory = configuration.getExceptionFactory();
     }
 
     @Override
-    public boolean sendSms(String toNumber, String msg) {
+    public boolean sendSms(String toNumber, String msg)
+    {
         _maskedLogger.trace("Sending SMS to number = {}", toNumber);
-        try {
+        try
+        {
             PublishRequest publishRequest = PublishRequest.builder()
                     .message(msg)
                     .phoneNumber(toNumber)
@@ -54,10 +58,14 @@ public final class AwsSnsSmsSender implements SmsSender {
             PublishResponse result = _snsClient.publish(publishRequest);
             _logger.debug("SMS sent, id = {} and the status code is = {}", result.messageId(), result.sdkHttpResponse().statusCode());
             return true;
-        } catch (SnsException snsException) {
+        }
+        catch (SnsException snsException)
+        {
             _logger.error(snsException.awsErrorDetails().errorMessage());
             throw _exceptionFactory.internalServerException(ErrorCode.EXTERNAL_SERVICE_ERROR);
-        } finally {
+        }
+        finally
+        {
             _snsClient.close();
         }
     }

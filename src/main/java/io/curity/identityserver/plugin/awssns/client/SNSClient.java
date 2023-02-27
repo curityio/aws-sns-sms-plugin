@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.curity.identityserver.plugin.awssns.client;
 
 import io.curity.identityserver.plugin.awssns.config.AwsSnsSmsConfig;
@@ -31,56 +32,68 @@ import software.amazon.awssdk.services.sts.StsClient;
 import software.amazon.awssdk.services.sts.model.AssumeRoleRequest;
 import software.amazon.awssdk.services.sts.model.AssumeRoleResponse;
 
-public class SNSClient {
+public class SNSClient
+{
     private static final Logger _logger = LoggerFactory.getLogger(SNSClient.class);
     private final SnsClient _snsClient;
 
-    public SNSClient(AwsSnsSmsConfig configuration) {
+    public SNSClient(AwsSnsSmsConfig configuration)
+    {
         String awsRegion = configuration.getAwsRegion().awsRegion;
         _logger.debug("AWS Region = {}", awsRegion);
 
         AwsSnsSmsConfig.AWSAccessMethod accessMethod = configuration.getSnsAccessMethod();
 
-        if (accessMethod.isEC2InstanceProfile().isPresent() && accessMethod.isEC2InstanceProfile().get()) {
+        if (accessMethod.isEC2InstanceProfile().isPresent() && accessMethod.isEC2InstanceProfile().get())
+        {
             _logger.debug("Using EC2 instance profile to configure SNS client");
             _snsClient = SnsClient.builder().region(Region.of(awsRegion)).credentialsProvider(InstanceProfileCredentialsProvider.builder().build()).build();
-        } else if (accessMethod.getAwsProfile().isPresent()) {
+        }
+        else if (accessMethod.getAwsProfile().isPresent())
+        {
             String awsProfileName = accessMethod.getAwsProfile().get().getAwsProfileName();
             _logger.debug("Using local AWS profile '{}' to configure SNS client", awsProfileName);
             AwsCredentialsProvider awsCredentialsProvider = ProfileCredentialsProvider.builder().profileName(awsProfileName).build();
 
             /* If roleARN is present, get temporary credentials through AssumeRole */
-            if (accessMethod.getAwsProfile().get().getAwsRoleARN().isPresent()) {
+            if (accessMethod.getAwsProfile().get().getAwsRoleARN().isPresent())
+            {
                 awsCredentialsProvider = getTemporaryCredentialsFromAssumeRole(awsCredentialsProvider, accessMethod.getAwsProfile().get().getAwsRoleARN().get(), awsRegion);
             }
             _snsClient = SnsClient.builder().region(Region.of(awsRegion)).credentialsProvider(awsCredentialsProvider).build();
-
-        } else if (accessMethod.getAccessKeyIdAndSecret().isPresent()) {
+        }
+        else if (accessMethod.getAccessKeyIdAndSecret().isPresent())
+        {
             _logger.debug("Using access key Id and secret to configure SNS client");
             AwsCredentialsProvider awsCredentialsProvider = StaticCredentialsProvider.create(AwsBasicCredentials.create(accessMethod.getAccessKeyIdAndSecret().get().getAccessKeyId(), accessMethod.getAccessKeyIdAndSecret().get().getAccessKeySecret()));
 
             /* If roleARN is present, get temporary credentials through AssumeRole */
-            if (accessMethod.getAccessKeyIdAndSecret().get().getAwsRoleARN().isPresent()) {
+            if (accessMethod.getAccessKeyIdAndSecret().get().getAwsRoleARN().isPresent())
+            {
                 awsCredentialsProvider = getTemporaryCredentialsFromAssumeRole(awsCredentialsProvider, accessMethod.getAccessKeyIdAndSecret().get().getAwsRoleARN().get(), awsRegion);
             }
             _snsClient = SnsClient.builder().region(Region.of(awsRegion)).credentialsProvider(awsCredentialsProvider).build();
-
-        } else if (accessMethod.getDefaultCredentialsProvider().isPresent()) {
+        }
+        else if (accessMethod.getDefaultCredentialsProvider().isPresent())
+        {
             _logger.debug("Using default credential provider to configure SNS client");
             Boolean reuseLastProviderEnabled = configuration.getSnsAccessMethod().getDefaultCredentialsProvider().get().isReuseLastProvider();
             _snsClient = SnsClient.builder().region(Region.of(awsRegion)).credentialsProvider(DefaultCredentialsProvider.builder().reuseLastProviderEnabled(reuseLastProviderEnabled).build()).build();
-        } else {
+        }
+        else
+        {
             throw new IllegalStateException("SNS configuration's access method is not valid");
         }
-
     }
 
-    private AwsCredentialsProvider getTemporaryCredentialsFromAssumeRole(AwsCredentialsProvider credentialsProvider, String roleArn, String region) {
+    private AwsCredentialsProvider getTemporaryCredentialsFromAssumeRole(AwsCredentialsProvider credentialsProvider, String roleArn, String region)
+    {
         StsClient stsClient = StsClient.builder().credentialsProvider(credentialsProvider).region(Region.of(region)).build();
         AssumeRoleRequest assumeRoleRequest = AssumeRoleRequest.builder().roleArn(roleArn).durationSeconds(3600).roleSessionName("sns-access").build();
         AssumeRoleResponse assumeRoleResponse = stsClient.assumeRole(assumeRoleRequest);
 
-        if (!assumeRoleResponse.sdkHttpResponse().isSuccessful()) {
+        if (!assumeRoleResponse.sdkHttpResponse().isSuccessful())
+        {
             _logger.warn("Assume Role request was not successful : {}", assumeRoleResponse.sdkHttpResponse().statusText().get());
             return credentialsProvider;
         }
@@ -91,7 +104,8 @@ public class SNSClient {
         return StaticCredentialsProvider.create(awsSessionCredentials);
     }
 
-    public SnsClient getSnsClient() {
+    public SnsClient getSnsClient()
+    {
         return _snsClient;
     }
 }

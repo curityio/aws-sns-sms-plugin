@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.curity.identityserver.plugin.awssns.descriptor;
 
-import io.curity.identityserver.plugin.awssns.config.AwsSnsSmsConfig;
 import io.curity.identityserver.plugin.awssns.AwsSnsSmsSender;
+import io.curity.identityserver.plugin.awssns.config.AwsSnsSmsConfig;
 import se.curity.identityserver.sdk.plugin.descriptor.SmsPluginDescriptor;
 import se.curity.identityserver.sdk.service.sms.SmsSender;
 
@@ -38,5 +39,5 @@ public final class AwsSnsSmsDescriptor implements SmsPluginDescriptor<AwsSnsSmsC
     public Class<? extends AwsSnsSmsConfig> getConfigurationType()
     {
         return AwsSnsSmsConfig.class;
-    }    
+    }
 }

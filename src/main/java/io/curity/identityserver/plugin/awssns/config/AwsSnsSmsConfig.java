@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.curity.identityserver.plugin.awssns.config;
 
 import se.curity.identityserver.sdk.config.Configuration;
@@ -23,17 +24,20 @@ import se.curity.identityserver.sdk.service.ExceptionFactory;
 
 import java.util.Optional;
 
-public interface AwsSnsSmsConfig extends Configuration {
+public interface AwsSnsSmsConfig extends Configuration
+{
     @Description("The AWS Region where SNS service is deployed.")
     AWSRegion getAwsRegion();
 
     @Description("Choose how to access SNS service.")
     AWSAccessMethod getSnsAccessMethod();
 
-    interface AWSAccessMethod extends OneOf {
+    interface AWSAccessMethod extends OneOf
+    {
         Optional<AccessKeyIdAndSecret> getAccessKeyIdAndSecret();
 
-        interface AccessKeyIdAndSecret {
+        interface AccessKeyIdAndSecret
+        {
             @Description("AWS Access Key ID.")
             String getAccessKeyId();
 
@@ -46,7 +50,8 @@ public interface AwsSnsSmsConfig extends Configuration {
 
         Optional<AWSProfile> getAwsProfile();
 
-        interface AWSProfile {
+        interface AWSProfile
+        {
             @Description("AWS Profile Name.")
             String getAwsProfileName();
 
@@ -59,13 +64,12 @@ public interface AwsSnsSmsConfig extends Configuration {
 
         Optional<DefaultCredentialsProviderConfig> getDefaultCredentialsProvider();
 
-        interface DefaultCredentialsProviderConfig {
+        interface DefaultCredentialsProviderConfig
+        {
             @Description("Controls whether the provider should reuse the last successful credentials provider in the chain. By default it is enabled")
             @DefaultBoolean(true) Boolean isReuseLastProvider();
         }
-
     }
 
     ExceptionFactory getExceptionFactory();
-
 }

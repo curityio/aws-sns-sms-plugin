@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.curity.identityserver.plugin.awssns.config;
 
-public enum AWSRegion {
+public enum AWSRegion
+{
     ap_south_1("ap-south-1"),
     eu_south_1("eu-south-1"),
     us_gov_east_1("us-gov-east-1"),
@@ -50,7 +52,8 @@ public enum AWSRegion {
 
     public final String awsRegion;
 
-    AWSRegion(String region) {
+    AWSRegion(String region)
+    {
         awsRegion = region;
     }
 }
