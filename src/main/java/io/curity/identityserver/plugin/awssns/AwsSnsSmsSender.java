@@ -33,16 +33,13 @@ import software.amazon.awssdk.services.sns.model.SnsException;
 public final class AwsSnsSmsSender implements SmsSender
 {
     private static final Logger _logger = LoggerFactory.getLogger(AwsSnsSmsSender.class);
-    private static final org.apache.logging.log4j.Logger _maskedLogger =
-            LogManager.getLogger(SnsClientManagedObject.class, ParameterizedMessageFactory.INSTANCE);
+    private static final org.apache.logging.log4j.Logger _maskedLogger = LogManager.getLogger(SnsClientManagedObject.class, ParameterizedMessageFactory.INSTANCE);
 
     private final ExceptionFactory _exceptionFactory;
-//    private final AwsSnsSmsConfig _config;
     private final SnsClient _snsClient;
 
     public AwsSnsSmsSender(AwsSnsSmsConfig configuration, SnsClientManagedObject snsClientManagedObject)
     {
-    //    _config = configuration;
         _exceptionFactory = configuration.getExceptionFactory();
         _snsClient = snsClientManagedObject.getSnsClient();
     }
@@ -53,10 +50,7 @@ public final class AwsSnsSmsSender implements SmsSender
         _maskedLogger.trace("Sending SMS to number = {}", toNumber);
         try
         {
-            PublishRequest publishRequest = PublishRequest.builder()
-                    .message(msg)
-                    .phoneNumber(toNumber)
-                    .build();
+            PublishRequest publishRequest = PublishRequest.builder().message(msg).phoneNumber(toNumber).build();
             PublishResponse result = _snsClient.publish(publishRequest);
             _logger.debug("SMS sent, id = {} and the status code is = {}", result.messageId(), result.sdkHttpResponse().statusCode());
             return true;
