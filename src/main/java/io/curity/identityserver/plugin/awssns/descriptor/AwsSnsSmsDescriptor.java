@@ -17,9 +17,13 @@
 package io.curity.identityserver.plugin.awssns.descriptor;
 
 import io.curity.identityserver.plugin.awssns.AwsSnsSmsSender;
+import io.curity.identityserver.plugin.awssns.client.SnsClientManagedObject;
 import io.curity.identityserver.plugin.awssns.config.AwsSnsSmsConfig;
+import se.curity.identityserver.sdk.plugin.ManagedObject;
 import se.curity.identityserver.sdk.plugin.descriptor.SmsPluginDescriptor;
 import se.curity.identityserver.sdk.service.sms.SmsSender;
+
+import java.util.Optional;
 
 public final class AwsSnsSmsDescriptor implements SmsPluginDescriptor<AwsSnsSmsConfig>
 {
@@ -39,5 +43,11 @@ public final class AwsSnsSmsDescriptor implements SmsPluginDescriptor<AwsSnsSmsC
     public Class<? extends AwsSnsSmsConfig> getConfigurationType()
     {
         return AwsSnsSmsConfig.class;
+    }
+
+    @Override
+    public Optional<? extends ManagedObject<AwsSnsSmsConfig>> createManagedObject(AwsSnsSmsConfig configuration)
+    {
+        return Optional.of(new SnsClientManagedObject(configuration));
     }
 }

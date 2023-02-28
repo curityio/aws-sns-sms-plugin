@@ -16,7 +16,7 @@
 
 package io.curity.identityserver.plugin.awssns;
 
-import io.curity.identityserver.plugin.awssns.client.SNSClient;
+import io.curity.identityserver.plugin.awssns.client.SnsClientManagedObject;
 import io.curity.identityserver.plugin.awssns.config.AwsSnsSmsConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.message.ParameterizedMessageFactory;
@@ -32,17 +32,19 @@ import software.amazon.awssdk.services.sns.model.SnsException;
 
 public final class AwsSnsSmsSender implements SmsSender
 {
-    private final SnsClient _snsClient;
     private static final Logger _logger = LoggerFactory.getLogger(AwsSnsSmsSender.class);
     private static final org.apache.logging.log4j.Logger _maskedLogger =
-            LogManager.getLogger(SNSClient.class, ParameterizedMessageFactory.INSTANCE);
+            LogManager.getLogger(SnsClientManagedObject.class, ParameterizedMessageFactory.INSTANCE);
 
     private final ExceptionFactory _exceptionFactory;
+//    private final AwsSnsSmsConfig _config;
+    private final SnsClient _snsClient;
 
-    public AwsSnsSmsSender(AwsSnsSmsConfig configuration)
+    public AwsSnsSmsSender(AwsSnsSmsConfig configuration, SnsClientManagedObject snsClientManagedObject)
     {
-        _snsClient = new SNSClient(configuration).getSnsClient();
+    //    _config = configuration;
         _exceptionFactory = configuration.getExceptionFactory();
+        _snsClient = snsClientManagedObject.getSnsClient();
     }
 
     @Override
@@ -61,12 +63,8 @@ public final class AwsSnsSmsSender implements SmsSender
         }
         catch (SnsException snsException)
         {
-            _logger.error(snsException.awsErrorDetails().errorMessage());
+            _logger.warn(snsException.awsErrorDetails().errorMessage());
             throw _exceptionFactory.internalServerException(ErrorCode.EXTERNAL_SERVICE_ERROR);
-        }
-        finally
-        {
-            _snsClient.close();
         }
     }
 }

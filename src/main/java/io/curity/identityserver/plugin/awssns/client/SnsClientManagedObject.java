@@ -19,6 +19,7 @@ package io.curity.identityserver.plugin.awssns.client;
 import io.curity.identityserver.plugin.awssns.config.AwsSnsSmsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.curity.identityserver.sdk.plugin.ManagedObject;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.AwsSessionCredentials;
@@ -32,13 +33,14 @@ import software.amazon.awssdk.services.sts.StsClient;
 import software.amazon.awssdk.services.sts.model.AssumeRoleRequest;
 import software.amazon.awssdk.services.sts.model.AssumeRoleResponse;
 
-public class SNSClient
+public class SnsClientManagedObject extends ManagedObject<AwsSnsSmsConfig>
 {
-    private static final Logger _logger = LoggerFactory.getLogger(SNSClient.class);
+    private static final Logger _logger = LoggerFactory.getLogger(SnsClientManagedObject.class);
     private final SnsClient _snsClient;
 
-    public SNSClient(AwsSnsSmsConfig configuration)
+    public SnsClientManagedObject(AwsSnsSmsConfig configuration)
     {
+        super(configuration);
         String awsRegion = configuration.getAwsRegion().awsRegion;
         _logger.debug("AWS Region = {}", awsRegion);
 
