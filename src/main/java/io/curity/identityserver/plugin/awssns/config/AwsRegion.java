@@ -16,7 +16,7 @@
 
 package io.curity.identityserver.plugin.awssns.config;
 
-public enum AWSRegion
+public enum AwsRegion
 {
     ap_south_1("ap-south-1"),
     eu_south_1("eu-south-1"),
@@ -52,7 +52,7 @@ public enum AWSRegion
 
     public final String awsRegion;
 
-    AWSRegion(String region)
+    AwsRegion(String region)
     {
         awsRegion = region;
     }

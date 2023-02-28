@@ -27,7 +27,7 @@ import java.util.Optional;
 public interface AwsSnsSmsConfig extends Configuration
 {
     @Description("The AWS Region where SNS service is deployed.")
-    AWSRegion getAwsRegion();
+    AwsRegion getAwsRegion();
 
     @Description("Choose how to access SNS service.")
     AWSAccessMethod getSnsAccessMethod();
