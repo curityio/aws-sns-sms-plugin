@@ -114,9 +114,6 @@ public class SnsClientManagedObject extends ManagedObject<AwsSnsSmsConfig>
     @Override
     public void close()
     {
-        if (_snsClient != null)
-        {
-            _snsClient.close();
-        }
+        _snsClient.close();
     }
 }
