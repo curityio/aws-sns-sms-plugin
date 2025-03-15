@@ -15,7 +15,7 @@ which can be installed.
 To install the plugin, copy the compiled JAR (and all of its dependencies) into the :file:`${IDSVR_HOME}/usr/share/plugins/${pluginGroup}`
 on each node, including the admin node. For more information about installing plugins, refer to the `https://curity.io/docs/idsvr/latest/developer-guide/plugins/index.html#plugin-installation`.
 
-## Configuraton
+## Configuration
 
 Add a new SMS provider of type `aws-sns` under Facilities & configure the `Sns Access Method` as desired.
 
